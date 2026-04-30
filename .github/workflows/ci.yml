@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: "./llm-wiki"
+          additional_files: "install.sh uninstall.sh"
+
+  markdownlint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: |
+            README.md
+            CONTRIBUTING.md
+            CODE_OF_CONDUCT.md
+            SECURITY.md
+            CHANGELOG.md
+            SUPPORT.md
+            FAQ.md
+            llm-wiki/**/*.md
+            .github/**/*.md
+
+  integration-test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run integration tests
+        run: |
+          set -e
+          TMPDIR="$(mktemp -d)"
+          cd "$TMPDIR"
+          echo "Testing init-wiki.sh..."
+          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/init-wiki.sh"
+          echo "Testing hash-files.sh..."
+          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/hash-files.sh"
+          echo "Testing validate-frontmatter.sh..."
+          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/validate-frontmatter.sh"
+          echo "Testing find-broken-links.sh..."
+          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/find-broken-links.sh"
+          echo "Testing find-orphans.sh..."
+          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/find-orphans.sh"
+          echo "Testing install.sh --help..."
+          bash "$GITHUB_WORKSPACE/install.sh" --help
+          cd /tmp
+          rm -rf "$TMPDIR"

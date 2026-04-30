@@ -28,9 +28,9 @@ if [ -d "$WIKI_ROOT/topics" ]; then
 fi
 
 # Collect all wikilink targets across all wiki pages
-ALL_LINKS=$(find "$WIKI_ROOT" -maxdepth 1 -name "*.md" ! -path "*/.llm-wiki/*" -exec grep -oP '\[\[([^\]|#]+)(?:\|[^\]]+)?\]\]' {} \; 2>/dev/null | sed 's/\[\[//;s/|.*//;s/\]\]//' | sort -u)
+ALL_LINKS=$(find "$WIKI_ROOT" -maxdepth 1 -name "*.md" ! -path "*/.llm-wiki/*" -exec sed -n 's/.*\[\[\([^]|#]*\)\(|[^]]*\)*\]\].*/\1/p' {} \; 2>/dev/null | sort -u)
 if [ -d "$WIKI_ROOT/topics" ]; then
-    TOPIC_LINKS=$(find "$WIKI_ROOT/topics" -name "*.md" -exec grep -oP '\[\[([^\]|#]+)(?:\|[^\]]+)?\]\]' {} \; 2>/dev/null | sed 's/\[\[//;s/|.*//;s/\]\]//' | sort -u)
+    TOPIC_LINKS=$(find "$WIKI_ROOT/topics" -name "*.md" -exec sed -n 's/.*\[\[\([^]|#]*\)\(|[^]]*\)*\]\].*/\1/p' {} \; 2>/dev/null | sort -u)
     ALL_LINKS="$ALL_LINKS"$'\n'"$TOPIC_LINKS"
 fi
 

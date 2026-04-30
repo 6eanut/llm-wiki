@@ -102,32 +102,17 @@ if [ "$WITH_HOOKS" = true ]; then
     SETTINGS_FILE=".claude/settings.local.json"
 
     if [ -f "$SETTINGS_FILE" ]; then
-        # Update existing settings
-        python3 -c "
-import json, sys
-try:
-    with open('$SETTINGS_FILE') as f:
-        settings = json.load(f)
-except Exception:
-    settings = {}
-
-if 'hooks' not in settings:
-    settings['hooks'] = {}
-
-# Add SessionStart hook
-settings['hooks']['SessionStart'] = [{
-    'matcher': '',
-    'command': '$SKILL_DIR/hooks/session-start.sh'
-}]
-
-with open('$SETTINGS_FILE', 'w') as f:
-    json.dump(settings, f, indent=2)
-    f.write('\n')
-print('ok')
-" 2>/dev/null && echo "   ✓ SessionStart hook configured in $SETTINGS_FILE" || {
-            echo "   ⚠ Failed to update settings. Add manually:"
+        # Update existing settings with jq
+        if command -v jq >/dev/null 2>&1; then
+            jq --arg cmd "$SKILL_DIR/hooks/session-start.sh" \
+               '.hooks.SessionStart = [{"matcher": "", "command": $cmd}]' \
+               "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && \
+            mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE" && \
+            echo "   ✓ SessionStart hook configured in $SETTINGS_FILE"
+        else
+            echo "   ⚠ jq not found. Install jq or add the hook manually:"
             echo "     See: https://claude.com/claude-code for hook configuration"
-        }
+        fi
     else
         # Create new settings file
         mkdir -p .claude

@@ -34,7 +34,7 @@ You should **proactively** use the wiki without waiting for explicit `/wiki*` co
 
 ### How to check the wiki (lightweight, no skill needed)
 ```
-1. Read {project}/wiki/.llm-wiki/index.md  (page catalog)
+1. Read ./wiki/.llm-wiki/index.md  (page catalog)
 2. Match query against tags, titles, summaries
 3. Read 3-5 most relevant pages
 4. Synthesize answer with evidence table and confidence rating
@@ -74,12 +74,12 @@ When you are invoked (via `Skill("llm-wiki")`), determine which workflow to foll
 |------|---------|
 | `WIKI_SCHEMA.md` | Page type definitions, field specs, naming conventions |
 | `scripts/init-wiki.sh` | Bootstrap a new wiki directory |
-| `{project}/wiki/.llm-wiki/` | Wiki metadata (index, cache, review queue) |
-| `{project}/wiki/.llm-wiki/schema.md` | Per-project copy of schema |
-| `{project}/wiki/.llm-wiki/config.md` | User configuration overrides |
-| `{project}/wiki/.llm-wiki/index.md` | Auto-generated index — **never edit by hand** |
-| `{project}/wiki/.llm-wiki/cache/hot-cache.md` | Multi-session context bridge |
-| `{project}/.raw/` | Immutable source documents |
+| `./wiki/.llm-wiki/` | Wiki metadata (index, cache, review queue) |
+| `./wiki/.llm-wiki/schema.md` | Per-project copy of schema |
+| `./wiki/.llm-wiki/config.md` | User configuration overrides |
+| `./wiki/.llm-wiki/index.md` | Auto-generated index — **never edit by hand** |
+| `./wiki/.llm-wiki/cache/hot-cache.md` | Multi-session context bridge |
+| `./.raw/` | Immutable source documents |
 
 ## Finding the Wiki Root
 

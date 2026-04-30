@@ -1,5 +1,9 @@
 # LLM Wiki — Compounding Knowledge Base for Claude Code
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/user/llmwiki/actions/workflows/ci.yml/badge.svg)](https://github.com/user/llmwiki/actions/workflows/ci.yml)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 A **Claude Code skill** that builds and maintains a persistent, interlinked wiki from your source documents. Based on Andrej Karpathy's [LLM Wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
 
 Knowledge is compiled once and kept current, not re-derived on every query.
@@ -8,16 +12,29 @@ Knowledge is compiled once and kept current, not re-derived on every query.
 
 ## Quick Start
 
+### Basic Setup
+
 ```bash
 # 1. Install the skill globally (one-time)
 ./llm-wiki/install.sh --force
 
 # 2. Set up wiki in your project
-~/.claude/skills/llm-wiki/scripts/setup-project.sh ./wiki --with-hooks
+~/.claude/skills/llm-wiki/scripts/setup-project.sh ./wiki
 
-# 3. Start Claude Code — that's it!
-# Ask any question naturally. Claude checks the wiki first, automatically.
+# 3. Start Claude Code and ask questions — Claude checks the wiki automatically!
 ```
+
+### With Session Hooks (Recommended)
+
+For the full experience, install with `--with-hooks`:
+
+```bash
+~/.claude/skills/llm-wiki/scripts/setup-project.sh ./wiki --with-hooks
+```
+
+This enables:
+- **Dynamic wiki stats at startup** — page count, recent changes, pending reviews injected at the start of every session
+- **Hot-cache for session continuity** — context from your last session is bridged forward so you don't lose state between sessions
 
 ### What to Expect
 
@@ -208,7 +225,7 @@ llm-wiki/
 
 ## Compared to RAG
 
-| | RAG | LLM Wiki |
+| | Typical RAG | LLM Wiki |
 |---|-----|----------|
 | Knowledge state | Re-derived per query | Persisted, compounding |
 | Cross-references | None | Bidirectional [[wikilinks]] |
@@ -217,6 +234,8 @@ llm-wiki/
 | Audit trail | None | `based_on` provenance chain |
 | Query cost | Every query reads source chunks | Index-first: only 3-5 pages read |
 | Proactive | No — must be invoked | Yes — CLAUDE.md + hook drives behavior |
+
+> Note: Advanced RAG implementations can include some of these features, but they're not standard. LLM Wiki provides them by design.
 
 ---
 
@@ -235,6 +254,17 @@ llm-wiki/
 
 ---
 
+## Community
+
+- [Contributing Guide](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
+- [Changelog](CHANGELOG.md)
+- [Support](SUPPORT.md)
+- [FAQ](FAQ.md)
+
+---
+
 ## Credits
 
 - **Pattern**: [Andrej Karpathy](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)
@@ -242,4 +272,4 @@ llm-wiki/
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE) for full text.

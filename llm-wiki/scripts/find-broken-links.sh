@@ -87,7 +87,7 @@ check_page() {
     local rel="${file#$WIKI_ROOT/}"
 
     local links
-    links=$((grep -oP '\[\[([^\]|#]+)(?:\|[^\]]+)?\]\]' "$file" 2>/dev/null || true) | sed 's/\[\[//;s/|.*//;s/\]\]//' | sort -u)
+    links=$(sed -n 's/.*\[\[\([^]|#]*\)\(|[^]]*\)*\]\].*/\1/p' "$file" 2>/dev/null | sort -u)
 
     while IFS= read -r link; do
         [ -z "$link" ] && continue

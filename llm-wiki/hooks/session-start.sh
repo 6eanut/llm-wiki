@@ -90,15 +90,7 @@ fi
 
 # Pending reviews
 if [ -f "$REVIEW_JSON" ]; then
-    PENDING=$(python3 -c "
-import json
-try:
-    with open('$REVIEW_JSON') as f:
-        data = json.load(f)
-    pending = data.get('pending', [])
-    print(len(pending))
-except: print(0)
-" 2>/dev/null || echo "0")
+    PENDING=$(jq '.pending | length' "$REVIEW_JSON" 2>/dev/null || echo "0")
 
     if [ "$PENDING" -gt 0 ]; then
         echo "🔔 **$PENDING pending review(s)** — run /wiki-review to process"

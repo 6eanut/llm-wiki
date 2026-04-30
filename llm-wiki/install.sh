@@ -60,7 +60,27 @@ done
 echo "  Installed $COMMAND_COUNT wiki commands"
 
 # Verify installation
-REQUIRED_FILES=("SKILL.md" "WIKI.md" "WIKI_SCHEMA.md" "scripts/init-wiki.sh" "scripts/setup-project.sh" "commands/wiki-ingest.md" "commands/wiki-query.md")
+REQUIRED_FILES=(
+    "SKILL.md"
+    "WIKI.md"
+    "WIKI_SCHEMA.md"
+    "scripts/init-wiki.sh"
+    "scripts/setup-project.sh"
+    "commands/wiki-ingest.md"
+    "commands/wiki-query.md"
+    "hooks/session-start.sh"
+    "hooks/session-stop.sh"
+    "workflows/ingest.md"
+    "workflows/query.md"
+    "workflows/lint.md"
+    "workflows/save-synthesis.md"
+    "workflows/graph.md"
+    "workflows/review.md"
+    "templates/article.md"
+    "templates/concept.md"
+    "templates/person.md"
+    "templates/synthesis.md"
+)
 ALL_OK=true
 for f in "${REQUIRED_FILES[@]}"; do
     if [ ! -f "$SKILL_DST/$f" ]; then
