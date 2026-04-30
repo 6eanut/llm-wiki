@@ -19,30 +19,39 @@
 ### Common Issues
 
 #### "Wiki not found" or "No index.md"
+
 Run `setup-project.sh` in your project directory:
+
 ```bash
 ~/.claude/skills/llm-wiki/scripts/setup-project.sh ./wiki
 ```
 
 #### Skill commands not working
+
 Make sure the skill is installed globally:
+
 ```bash
 ./llm-wiki/install.sh --force
 ```
 
 #### Shell scripts fail with "command not found"
+
 Ensure you have these dependencies:
+
 - `bash` (4.0+)
 - GNU `find`, `grep`, `sed`, `sort`, `sha256sum`
 - `jq` (for JSON processing in hooks)
 
 On macOS, install GNU tools via Homebrew:
+
 ```bash
 brew install coreutils grep jq
 ```
 
 ### Still Stuck?
+
 Open a [GitHub Discussion](../../discussions) with:
+
 - What you're trying to do
 - What command you ran
 - The exact error message

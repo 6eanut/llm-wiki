@@ -14,12 +14,14 @@ confidence: high | medium | low
 # {Title / 标题}
 
 ## Question / 问题
+>
 > Original question
 
 ## Answer / 回答
 <!-- Direct answer, synthesized from evidence. -->
 
 ## Evidence / 证据
+
 | Source Page | Key Point | Relevance |
 |-------------|-----------|-----------|
 | [[slug]] | ... | high |
@@ -35,7 +37,8 @@ confidence: high | medium | low
 -->
 
 ## Gaps / 知识缺口
-- 
+
+-
 
 ## Confidence / 置信度: {high|medium|low}
 <!-- Reasoning for confidence level. -->

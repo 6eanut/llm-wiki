@@ -15,11 +15,14 @@ summary: ""
 <!-- Brief biography — 3-5 sentences. -->
 
 ## Key Contributions / 主要贡献
-- 
+
+-
 
 ## Related Work / 相关工作
+
 - [[related-concept]] — their role
 - [[related-person]] — collaboration or influence
 
 ## Links / 链接
-- 
+
+-

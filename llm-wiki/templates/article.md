@@ -17,7 +17,9 @@ summary: ""
 <!-- Main body — flexible format depending on content type. -->
 
 ## Key Takeaways / 关键收获
-- 
+
+-
 
 ## Related / 关联
+
 - [[related-slug]] — connection

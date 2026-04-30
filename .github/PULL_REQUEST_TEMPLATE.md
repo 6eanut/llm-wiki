@@ -24,7 +24,7 @@ Describe the testing you performed to verify your changes:
 
 Instructions for reviewers to reproduce and verify:
 
-```
+```bash
 # Steps to test
 ```
 

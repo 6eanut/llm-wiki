@@ -17,7 +17,8 @@ Thumbs.db
 
 # The wiki content itself (each project has its own wiki/)
 # Commented out so this source repo can track its own wiki instance
-# wiki/
+wiki/
+.raw/
 
 # Claude Code
 .claude/

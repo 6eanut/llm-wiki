@@ -16,7 +16,7 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: "./llm-wiki"
-          additional_files: "install.sh uninstall.sh"
+          additional_files: "uninstall.sh"
 
   markdownlint:
     name: Markdown Lint
@@ -47,17 +47,54 @@ jobs:
           set -e
           TMPDIR="$(mktemp -d)"
           cd "$TMPDIR"
-          echo "Testing init-wiki.sh..."
+
+          echo "=== Testing init-wiki.sh ==="
           bash "$GITHUB_WORKSPACE/llm-wiki/scripts/init-wiki.sh"
-          echo "Testing hash-files.sh..."
-          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/hash-files.sh"
-          echo "Testing validate-frontmatter.sh..."
-          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/validate-frontmatter.sh"
-          echo "Testing find-broken-links.sh..."
-          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/find-broken-links.sh"
-          echo "Testing find-orphans.sh..."
-          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/find-orphans.sh"
-          echo "Testing install.sh --help..."
-          bash "$GITHUB_WORKSPACE/install.sh" --help
+
+          echo "=== Testing hash-files.sh ==="
+          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/hash-files.sh" ./wiki
+
+          echo "=== Creating test pages ==="
+          cat > ./wiki/test-concept.md << 'EOF'
+          ---
+          title: "Test Concept"
+          type: concept
+          language: en
+          created: "2026-04-30"
+          modified: "2026-04-30"
+          tags: [test, example]
+          summary: "A test page for CI validation"
+          ---
+          # Test Concept
+          This is a test page. See [[other-page]] for more.
+          EOF
+
+          cat > ./wiki/other-page.md << 'EOF'
+          ---
+          title: "Other Page"
+          type: article
+          language: en
+          created: "2026-04-30"
+          modified: "2026-04-30"
+          tags: [test]
+          summary: "Another test page"
+          ---
+          # Other Page
+          This links back to [[test-concept]].
+          EOF
+
+          echo "=== Testing validate-frontmatter.sh ==="
+          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/validate-frontmatter.sh" ./wiki
+
+          echo "=== Testing find-broken-links.sh ==="
+          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/find-broken-links.sh" ./wiki
+
+          echo "=== Testing find-orphans.sh ==="
+          bash "$GITHUB_WORKSPACE/llm-wiki/scripts/find-orphans.sh" ./wiki
+
+          echo "=== Testing install.sh --help ==="
+          bash "$GITHUB_WORKSPACE/llm-wiki/install.sh" --help
+
           cd /tmp
           rm -rf "$TMPDIR"
+          echo "=== All integration tests passed ==="

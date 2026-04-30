@@ -33,6 +33,7 @@ You should **proactively** use the wiki without waiting for explicit `/wiki*` co
 5. **Knowledge gap detection**: Actively identify what the wiki is missing and suggest sources to fill gaps.
 
 ### How to check the wiki (lightweight, no skill needed)
+
 ```
 1. Read ./wiki/.llm-wiki/index.md  (page catalog)
 2. Match query against tags, titles, summaries
@@ -41,6 +42,7 @@ You should **proactively** use the wiki without waiting for explicit `/wiki*` co
 ```
 
 ### When to use the full skill
+
 Use `Skill("llm-wiki")` when you need deep wiki operations (ingestion, full lint, graph, review queue). The skill gives you access to all `workflows/` and `scripts/`.
 
 ## Slash Commands
@@ -84,6 +86,7 @@ When you are invoked (via `Skill("llm-wiki")`), determine which workflow to foll
 ## Finding the Wiki Root
 
 The wiki root is determined by (in priority order):
+
 1. `LLM_WIKI_ROOT` environment variable
 2. `wiki/` directory in the current project
 3. Ask the user: "Where should I put the wiki? (default: ./wiki)"

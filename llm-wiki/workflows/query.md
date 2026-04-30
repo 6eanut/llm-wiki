@@ -9,6 +9,7 @@
 ## Design Rationale
 
 `★ Insight ─────────────────────────────────────`
+
 - The "index-first" pattern is the key optimization: instead of reading every potentially-relevant page (O(n) reads), you read a single index file (O(1)) to narrow down to ~3-5 pages. This keeps query latency low even as the wiki grows to hundreds of pages.
 - Evidence tables with explicit confidence ratings make the reasoning auditable. A user can trace every claim back to its source page, which is essential for trust — unlike a black-box RAG system.
 - The `/wiki-save` prompt at the end closes the compounding loop: good answers become permanent synthesis pages, preventing the same synthesis work from being repeated.
@@ -27,23 +28,27 @@ Same as ingest — check `$LLM_WIKI_ROOT`, then `wiki/`, then ask.
 Read `$WIKI_ROOT/.llm-wiki/index.md`.
 
 This gives you:
+
 - All page slugs, titles, types, languages, tags, and summaries
 - Tag groupings for topical navigation
 - Orphan pages and review queue items
 
 **If the index is stale** (run `scripts/check-stale.sh`; exit code 1 or 2):
+
 - Warn the user: "Index may be out of date. Consider running /wiki-lint first."
 - Proceed anyway (the index is still useful even if slightly stale)
 
 ### Step 2: (Optional) Check Hot Cache
 
 If `$WIKI_ROOT/.llm-wiki/cache/hot-cache.md` exists, read it:
+
 - It may contain context about what the user was working on recently
 - If the question relates to recent activity, this saves you from re-reading pages
 
 ### Step 3: Detect Query Language
 
 Analyze the query text:
+
 - `>70% CJK` → query language is `zh`
 - `>70% Latin` → query language is `en`
 - Otherwise → `bilingual`
@@ -57,11 +62,13 @@ From the index, find pages relevant to the query:
 3. **Semantic matching**: Use your understanding to identify conceptually related pages
 
 **Language preference** (if `prefer_language_match: true` in config):
+
 - Prefer pages whose `language` matches the query language
 - Fall back to pages in the other language if needed
 - Use `aliases` for cross-language matching
 
 **Selection strategy:**
+
 - Target 3-5 pages (configurable: `max_pages_to_read`)
 - Prefer higher-confidence pages
 - Include at least one from each relevant tag cluster
@@ -70,11 +77,13 @@ From the index, find pages relevant to the query:
 ### Step 5: Read the Selected Pages
 
 Read each selected page in full:
+
 - Extract all factual claims relevant to the query
 - Note the source of each claim (which page, which section)
 - Track confidence indicators
 
 **For each page read, note:**
+
 - Key claims relevant to the query
 - Evidence quality (is it sourced? speculative?)
 - Relationships to other pages (wikilinks)
@@ -151,29 +160,35 @@ If the user says yes (or runs `/wiki-save`), follow the `workflows/save-synthesi
 ## Edge Cases
 
 ### No Relevant Pages Found
+
 - Report: "The wiki doesn't have information on this topic yet."
 - Suggest related topics that do exist
 - Suggest sources that could be ingested to cover this gap
 - Offer to do a web search as a fallback (but note that the answer won't be wikified)
 
 ### Index Is Empty (Brand New Wiki)
+
 - Report: "The wiki is empty. Ingest some sources first with /wiki-ingest."
 - Show how to use `/wiki-ingest`
 
 ### Query Is Ambiguous
+
 - If the question could refer to multiple concepts, ask a clarifying question
 - Show both interpretations and let the user choose
 
 ### Contradictions Found
+
 - Always present contradictions transparently
 - If you can resolve the contradiction from the evidence (one page is more recent / better sourced), say so
 - If unresolvable, flag it for review and note it as reducing confidence
 
 ### Very Broad Question ("Tell me about AI")
+
 - Narrow with a clarifying question
 - Suggest browsing the index by tag instead: "Here are the tags in the wiki: [list]. Which topic interests you?"
 
 ### Question in Different Language Than Wiki Content
+
 - If the user asks in Chinese but all relevant pages are in English (or vice versa):
   - Answer in the user's language
   - Note: "These pages are in English; I've translated the key points"

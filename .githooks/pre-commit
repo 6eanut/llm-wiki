@@ -1,0 +1,14 @@
+#!/bin/sh
+# pre-commit — Run local CI checks before each commit
+#
+# To activate this hook, run:
+#   git config core.hooksPath .githooks
+#
+# This will run scripts/ci-local.sh which mirrors the CI pipeline:
+#   ShellCheck → markdownlint → Integration tests
+#
+# Exit codes:
+#   0 = all checks passed, commit proceeds
+#   1 = one or more checks failed, commit is blocked
+
+exec "$(dirname "$0")/../scripts/ci-local.sh"

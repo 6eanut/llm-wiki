@@ -3,6 +3,7 @@
 This file defines all page types, required fields, naming conventions, and structural rules for the LLM Wiki. It is the canonical reference for how the wiki is organized.
 
 Read this file when you need to understand:
+
 - What page types exist and their purposes
 - What frontmatter fields are required/optional for each type
 - How pages are named and structured
@@ -26,11 +27,13 @@ Read this file when you need to understand:
 **Purpose**: Define a term, idea, methodology, framework, tool, or entity.
 
 **File naming**: `{slug}.md` — lowercase kebab-case, ASCII-safe. Examples:
+
 - `transformer-architecture.md`
 - `retrieval-augmented-generation.md`
 - `gradient-descent.md`
 
 **Required frontmatter**:
+
 ```yaml
 ---
 title: "Display Title"              # Can be bilingual: "Quantum Computing / 量子计算"
@@ -45,6 +48,7 @@ summary: ""                         # One-sentence definition (used in index)
 ```
 
 **Optional frontmatter**:
+
 ```yaml
 source_url: ""                      # URL of original source material
 source_hash: ""                     # SHA-256 of source material
@@ -53,6 +57,7 @@ related_concepts: []                # Explicit related slugs (beyond wikilinks)
 ```
 
 **Body structure**:
+
 ```markdown
 # {Title}
 
@@ -81,10 +86,12 @@ related_concepts: []                # Explicit related slugs (beyond wikilinks)
 **Purpose**: Research notes, blog drafts, meeting notes, diary entries, imported web articles, PDF summaries.
 
 **File naming**: `{YYYY-MM-DD}-{slug}.md` — date-prefixed for chronological sorting. Examples:
+
 - `2026-04-28-weekly-review.md`
 - `2026-04-27-transformer-paper-notes.md`
 
 **Required frontmatter**:
+
 ```yaml
 ---
 title: "Display Title"
@@ -98,6 +105,7 @@ summary: ""                         # One-sentence description
 ```
 
 **Optional frontmatter**:
+
 ```yaml
 source_url: ""                      # Original URL if a web article
 source_hash: ""                     # SHA-256 of original source
@@ -107,6 +115,7 @@ diary_date: YYYY-MM-DD              # For diary entries
 ```
 
 **Body structure**:
+
 ```markdown
 # {Title}
 
@@ -131,10 +140,12 @@ diary_date: YYYY-MM-DD              # For diary entries
 **Purpose**: Author, researcher, historical figure, notable individual.
 
 **File naming**: `{slug}.md` — lowercase kebab-case of the person's name. Examples:
+
 - `alan-turing.md`
 - `andrej-karpathy.md`
 
 **Required frontmatter**:
+
 ```yaml
 ---
 title: "Display Name"
@@ -149,6 +160,7 @@ summary: ""                         # One-line: who they are, why notable
 ```
 
 **Optional frontmatter**:
+
 ```yaml
 birth: YYYY-MM-DD
 death: YYYY-MM-DD                   # Omit if still living
@@ -158,6 +170,7 @@ affiliations: []                    # Organizations they're associated with
 ```
 
 **Body structure**:
+
 ```markdown
 # {Name}
 
@@ -184,9 +197,11 @@ affiliations: []                    # Organizations they're associated with
 **Purpose**: A saved query answer — synthesized from existing wiki pages. These are the "compounding" part of the wiki: explorations that become permanent knowledge.
 
 **File naming**: `synth-{YYYY-MM-DD}-{slug}.md`. Examples:
+
 - `synth-2026-04-28-quantum-vs-classical.md`
 
 **Required frontmatter**:
+
 ```yaml
 ---
 title: "Display Title"
@@ -203,12 +218,14 @@ confidence: high | medium | low
 ```
 
 **Optional frontmatter**:
+
 ```yaml
 contradictions_found: []            # Slugs of pages with contradictory info
 gaps_noted: []                      # Knowledge gaps identified
 ```
 
 **Body structure**:
+
 ```markdown
 # {Title}
 
@@ -244,18 +261,21 @@ gaps_noted: []                      # Knowledge gaps identified
 ## Cross-Referencing Conventions
 
 ### Wikilinks
+
 ```
 [[page-slug]]              → Link to another wiki page
 [[page-slug|display text]] → Link with custom text
 ```
 
 ### Rules for Wikilinks
+
 - **Link liberally**: Every mention of another wiki page's topic should be a wikilink.
 - **Bidirectional**: When you add a link from Page A to Page B, check if Page B should link back.
 - **No paths in wikilinks**: Use just the slug (filename minus `.md`), not the full path. All pages are in the same flat namespace.
 - **Resolve aliases**: Check `aliases` in frontmatter when looking up wikilink targets.
 
 ### Contradiction Callouts
+
 When a contradiction is detected between pages, format as:
 
 ```markdown
@@ -313,7 +333,9 @@ The index at `.llm-wiki/index.md` is **auto-generated** and follows this format:
 | Bilingual titles | "English / 中文" | `Quantum Computing / 量子计算` |
 
 ### Slug Derivation
+
 When deriving a slug from a title:
+
 1. Convert to lowercase
 2. Replace spaces and special chars with hyphens
 3. Remove non-ASCII characters (use English equivalent or transliteration)
@@ -325,24 +347,30 @@ When deriving a slug from a title:
 ## Language Handling
 
 ### Page Language (`language` field)
+
 - `en` — Page body is primarily English
 - `zh` — Page body is primarily Chinese
 - `bilingual` — Page has substantial content in both languages
 
 ### Source Language Detection (during ingest)
+
 - Count CJK characters (Unicode range U+4E00–U+9FFF) vs Latin characters
 - If >70% CJK → `zh`
 - If >70% Latin → `en`
 - If 30-70% mix → `bilingual`
 
 ### Bilingual Page Convention
+
 Bilingual pages use this section heading pattern:
+
 ```markdown
 ## Section Name / 中文标题
 ```
 
 ### Query Language Matching
+
 When answering a query:
+
 - Detect the query language
 - Prefer pages with matching `language` field
 - Fall back to other-language pages if needed
@@ -353,6 +381,7 @@ When answering a query:
 ## Health Check Categories
 
 ### Structural (Quick Lint — bash-assisted, zero cost)
+
 | Check | Script | Severity if fails |
 |-------|--------|-------------------|
 | Missing/invalid frontmatter | `validate-frontmatter.sh` | ❌ Error |
@@ -361,6 +390,7 @@ When answering a query:
 | Stale index | `check-stale.sh` | ⚠️ Warning |
 
 ### Semantic (Full Lint — LLM-intensive, token cost)
+
 | Check | Severity if fails |
 |-------|-------------------|
 | Contradictions between pages | ❌ Error |

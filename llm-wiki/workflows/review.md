@@ -11,6 +11,7 @@
 ### Step 1: Read Review Queue
 
 Read `$WIKI_ROOT/.llm-wiki/review.json`:
+
 ```json
 {"pending": [{"id": "...", "type": "contradiction|quality|staleness|gap|naming", "pages": ["slug"], "description": "...", "severity": "error|warning|info", "detected": "YYYY-MM-DD", "context": "..."}]}
 ```
@@ -26,6 +27,7 @@ Read `$WIKI_ROOT/.llm-wiki/review.json`:
 ### Step 3: Process Items One at a Time
 
 For each item:
+
 1. Present full context (type, pages, description, severity)
 2. Read referenced pages for context
 3. Suggest resolution options

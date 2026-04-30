@@ -11,6 +11,7 @@ Default mode (no flag): `--quick`
 ## Design Rationale
 
 `★ Insight ─────────────────────────────────────`
+
 - Separating "quick" (bash) from "full" (LLM) lint is a cost optimization: structural checks like frontmatter validation and broken links run in milliseconds via grep/sed, while semantic checks like contradiction detection require reading page content and reasoning — expensive LLM operations. Most issues are caught by quick lint, so full lint is only needed periodically.
 - Exposing lint results as exit codes (0=clean, 1=issues, 2=error) enables CI/CD integration. A `check-stale.sh` failure in CI can block a deploy, while `find-orphans.sh` warnings can be non-blocking.
 - The review queue (`review.json`) serves as a persistent task list — lint doesn't just report problems, it schedules them for human attention. This closes the loop between automated checking and human curation.
@@ -29,6 +30,7 @@ scripts/validate-frontmatter.sh "$WIKI_ROOT"
 ```
 
 **What it checks:**
+
 - All pages have `---` frontmatter delimiters
 - Required fields present: `title`, `type`, `language`, `created`, `modified`, `tags`, `summary`
 - `type` is one of: `concept`, `article`, `person`, `synthesis`
@@ -46,6 +48,7 @@ scripts/find-broken-links.sh "$WIKI_ROOT"
 ```
 
 **What it checks:**
+
 - Every `[[target]]` wikilink points to an existing page slug
 - Also resolves aliases (if a page has `aliases: [alt-name]`, `[[alt-name]]` is valid)
 - Skips external URLs (containing `://`)
@@ -62,6 +65,7 @@ scripts/find-orphans.sh "$WIKI_ROOT"
 ```
 
 **What it checks:**
+
 - Every page has at least one incoming `[[wikilink]]` from another page
 - Pages with zero incoming links are flagged
 
@@ -76,6 +80,7 @@ scripts/check-stale.sh "$WIKI_ROOT"
 ```
 
 **What it checks:**
+
 - Compares stored hash of all page frontmatter against live hash
 - Detects if pages have been modified since the last index generation
 
@@ -88,6 +93,7 @@ scripts/check-stale.sh "$WIKI_ROOT"
 The LLM performs a quick scan (no page content reads needed):
 
 1. List all `*.md` files in `$WIKI_ROOT/` (excluding `.llm-wiki/` and `index.md`):
+
    ```bash
    find "$WIKI_ROOT" -maxdepth 1 -name "*.md" ! -path "*/.llm-wiki/*" ! -name "index.md"
    ```
@@ -141,6 +147,7 @@ After running Q1-Q5, present:
 Full lint requires the LLM to read page content and reason about it. This has token cost but catches issues that bash cannot.
 
 **Only run `--full` when:**
+
 - User explicitly requests it
 - `full_lint_frequency` threshold is reached (config, default: every 10 ingests)
 - After major changes (many pages created/updated)
@@ -163,6 +170,7 @@ Always run Q1-Q5 before full lint. If there are errors, ask the user if they wan
    - Add to `review.json`
 
 **Focus on high-impact contradictions:**
+
 - Dates, numbers, measurements
 - Causality claims ("X causes Y" vs "X does not cause Y")
 - Definitions (same term, different definitions)
@@ -172,21 +180,25 @@ Always run Q1-Q5 before full lint. If there are errors, ask the user if they wan
 For each page, assess:
 
 **Completeness:**
+
 - Are required sections present?
 - Are sections substantially filled (not just placeholders)?
 - Are there "TODO" or "TBD" markers?
 
 **Staleness:**
+
 - Pages not modified in 30+ days → flag
 - Pages not modified in 90+ days → stronger flag
 - Articles about rapidly-changing topics → suggest refresh
 
 **Depth:**
+
 - Pages under 200 words → flag as potentially too shallow
 - Pages with no wikilinks → flag as isolated
 - Pages with no references → flag as unsourced
 
 **Boilerplate:**
+
 - Template language still present ("[Clear, concise definition]")
 - Empty lists or sections
 - Generic content that doesn't add information
@@ -221,6 +233,7 @@ For each page, assess:
 ### Step F7: Add to Review Queue
 
 For issues that require human judgment:
+
 ```json
 {
   "type": "quality|contradiction|staleness|gap",
@@ -285,24 +298,29 @@ Add to `$WIKI_ROOT/.llm-wiki/review.json`.
 ## Edge Cases
 
 ### Very Large Wiki (>100 pages)
+
 - Quick lint: still fast (bash-only)
 - Full lint: warn user about token cost; suggest running on a subset
 - Consider linting by tag (e.g., `/wiki-lint --full --tag machine-learning`)
 
 ### Wiki Has Errors (Quick Lint Fails)
+
 - Full lint may produce unreliable results if the foundation is broken
 - Ask user: "Fix errors first, or proceed anyway?"
 
 ### Newly Initialized Wiki (0 Pages)
+
 - Quick lint: all checks pass (nothing to check)
 - Report: "Wiki is empty — nothing to lint. Start by ingesting sources with /wiki-ingest."
 
 ### Contradiction That Can't Be Resolved
+
 - Mark both pages with the contradiction callout
 - Add to review queue with `severity: error`
 - In full lint report, note: "Requires human judgment or additional sources"
 
 ### External Links Broken (URLs)
+
 - `find-broken-links.sh` skips URLs by design
 - In full lint, optionally check URLs:
   - Use `curl -sI` to check HTTP status

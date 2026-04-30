@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial release of LLM Wiki skill for Claude Code
 - Two-phase source ingestion (`/wiki-ingest`) with SHA-256 idempotency
 - Index-first knowledge retrieval (`/wiki-query`) for O(1) lookup

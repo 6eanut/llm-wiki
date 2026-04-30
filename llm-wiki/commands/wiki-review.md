@@ -7,7 +7,9 @@ description: Walk through the review queue — contradictions, stale pages, know
 The user ran `/wiki-review $ARGUMENTS`.
 
 ## Procedure
+
 Use `Skill("llm-wiki")` → `workflows/review.md` for the full procedure:
+
 1. Read `./wiki/.llm-wiki/review.json` for pending items
 2. For each item, present the issue and relevant pages
 3. Let the user decide: resolve, defer, or escalate

@@ -1,7 +1,7 @@
 # LLM Wiki — Compounding Knowledge Base for Claude Code
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/user/llmwiki/actions/workflows/ci.yml/badge.svg)](https://github.com/user/llmwiki/actions/workflows/ci.yml)
+[![CI](https://github.com/6eanut/llm-wiki/actions/workflows/ci.yml/badge.svg)](https://github.com/6eanut/llm-wiki/actions/workflows/ci.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 A **Claude Code skill** that builds and maintains a persistent, interlinked wiki from your source documents. Based on Andrej Karpathy's [LLM Wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
@@ -33,6 +33,7 @@ For the full experience, install with `--with-hooks`:
 ```
 
 This enables:
+
 - **Dynamic wiki stats at startup** — page count, recent changes, pending reviews injected at the start of every session
 - **Hot-cache for session continuity** — context from your last session is bridged forward so you don't lose state between sessions
 
@@ -150,28 +151,35 @@ wiki/
 ## Page Types
 
 ### `concept` — Define a term, idea, methodology, tool
+
 ```yaml
 type: concept
 language: en | zh | bilingual
 ```
+
 Body: Definition → Key Properties → Examples → Related
 
 ### `article` — Notes, blog drafts, imported documents
+
 ```yaml
 type: article
 ```
+
 File: `YYYY-MM-DD-{slug}.md`
 
 ### `person` — Author, researcher, notable individual
+
 ```yaml
 type: person
 ```
 
 ### `synthesis` — Saved query answer (the compounding mechanism)
+
 ```yaml
 type: synthesis
 query, based_on[], confidence: high | medium | low
 ```
+
 File: `synth-YYYY-MM-DD-{slug}.md`
 
 ---

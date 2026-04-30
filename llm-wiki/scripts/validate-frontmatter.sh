@@ -29,7 +29,7 @@ ISSUES_FOUND=0
 
 check_page() {
     local file="$1"
-    local rel="${file#$WIKI_ROOT/}"
+    local rel="${file#"$WIKI_ROOT"/}"
     local frontmatter
 
     # Extract frontmatter between --- markers
@@ -43,7 +43,7 @@ check_page() {
 
     # Extract YAML field values
     extract_field() {
-        echo "$frontmatter" | grep -E "^${1}:" | sed "s/^${1}:[[:space:]]*//" | head -1
+        echo "$frontmatter" | grep -E "^${1}:" | sed "s/^${1}:[[:space:]]*//" | sed 's/^"//;s/"$//' | head -1
     }
 
     # Check required fields exist

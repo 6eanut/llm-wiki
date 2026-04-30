@@ -84,7 +84,7 @@ BROKEN_FOUND=0
 
 check_page() {
     local file="$1"
-    local rel="${file#$WIKI_ROOT/}"
+    local rel="${file#"$WIKI_ROOT"/}"
 
     local links
     links=$(sed -n 's/.*\[\[\([^]|#]*\)\(|[^]]*\)*\]\].*/\1/p' "$file" 2>/dev/null | sort -u)
