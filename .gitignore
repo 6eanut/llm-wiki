@@ -15,10 +15,13 @@ Thumbs.db
 *.tmp
 *.bak
 
-# The wiki content itself (each project has its own wiki/)
-# Commented out so this source repo can track its own wiki instance
+# The wiki content itself (each project builds its own)
 wiki/
-.raw/
+
+# Source files: ignore user content, but ship demo files for quickstart
+.raw/*
+!.raw/greek-olympians.md
+!.raw/perseus-medusa.md
 
 # Claude Code
 .claude/

@@ -12,24 +12,28 @@ Knowledge is compiled once and kept current, not re-derived on every query.
 
 ## Quick Start
 
-### Basic Setup
+### One Command
 
 ```bash
-# 1. Install the skill globally (one-time)
-./llm-wiki/install.sh --force
-
-# 2. Set up wiki in your project
-~/.claude/skills/llm-wiki/scripts/setup-project.sh ./wiki
-
-# 3. Start Claude Code and ask questions — Claude checks the wiki automatically!
+git clone https://github.com/6eanut/llm-wiki
+cd llm-wiki
+./quickstart.sh
 ```
+
+That's it. The script installs the skill, initializes the wiki, and drops in demo source files (Greek mythology — optional, use `--no-demo` to skip).
+
+After setup, start Claude Code and run:
+
+```
+/wiki-ingest .raw/greek-olympians.md
+```
+
+Then ask anything about the content — Claude checks the wiki automatically.
 
 ### With Session Hooks (Recommended)
 
-For the full experience, install with `--with-hooks`:
-
 ```bash
-~/.claude/skills/llm-wiki/scripts/setup-project.sh ./wiki --with-hooks
+./quickstart.sh --with-hooks
 ```
 
 This enables:
@@ -37,50 +41,52 @@ This enables:
 - **Dynamic wiki stats at startup** — page count, recent changes, pending reviews injected at the start of every session
 - **Hot-cache for session continuity** — context from your last session is bridged forward so you don't lose state between sessions
 
+### Manual Setup
+
+Prefer manual control? Here's the three-step version:
+
+```bash
+./llm-wiki/install.sh --force                                           # 1. Install skill
+~/.claude/skills/llm-wiki/scripts/setup-project.sh ./wiki --with-hooks  # 2. Init wiki
+# 3. Drop source files in .raw/ and run /wiki-ingest
+```
+
+### More Options
+
+See the [Quick Start Guide](https://github.com/6eanut/llm-wiki/wiki/Quick-Start) on the wiki for troubleshooting and advanced configuration.
+
 ### What to Expect
 
 After setup, start Claude Code in your project and ask a question:
 
 ```
-You: "What is RISC-V?"
+You: "What is the relationship between Zeus and Athena?"
 
 Claude: [reads ./wiki/.llm-wiki/index.md automatically]
         [finds relevant pages]
         [synthesizes answer with citations]
 
         ## Answer
-        RISC-V is an open standard instruction set architecture...
+        Athena is Zeus's daughter, born from his head...
 
         ## Evidence
         | Source Page | Key Point | Confidence |
         |-------------|-----------|------------|
-        | [[risc-v]] | ISA overview | high |
+        | [[athena]] | emerged from Zeus's forehead | high |
+        | [[zeus]] | Father of Athena | high |
 ```
 
 **You don't need to type `/wiki-query` for routine questions.** Claude reads CLAUDE.md at startup and follows the rule: "check the wiki before answering."
 
 If the wiki doesn't have relevant knowledge, Claude will tell you and suggest adding source files to `.raw/`.
 
-### Adding Knowledge
+### Adding Your Own Knowledge
 
 1. Drop source files (markdown, text) into `./.raw/`
 2. Run `/wiki-ingest .raw/your-file.md`
 3. The file is analyzed, concepts extracted, and interlinked pages created
 
 ---
-
-## Slash Commands
-
-| Command | Description |
-|---------|-------------|
-| `/wiki` | Dashboard — total pages, recent activity, pending reviews |
-| `/wiki-ingest <file\|URL>` | Two-phase ingest: analyze source → generate interlinked pages |
-| `/wiki-query <question>` | Index-first retrieval — reads only relevant pages, synthesizes answer |
-| `/wiki-lint [--quick\|--full]` | Health check. Quick = bash scripts (free). Full = LLM semantic analysis |
-| `/wiki-save` | Save current answer as a permanent synthesis page |
-| `/wiki-graph` | Generate interactive D3.js force-directed knowledge graph |
-| `/wiki-review` | Process the review queue — contradictions, stale pages, knowledge gaps |
-
 ---
 
 ## Architecture
