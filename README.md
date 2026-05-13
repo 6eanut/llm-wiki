@@ -8,6 +8,9 @@ A **Claude Code skill** that builds and maintains a persistent, interlinked wiki
 
 Knowledge is compiled once and kept current, not re-derived on every query.
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/05d9bf4a-3727-45e4-bb95-cad62de53951" />
+
+
 ---
 
 ## Quick Start
