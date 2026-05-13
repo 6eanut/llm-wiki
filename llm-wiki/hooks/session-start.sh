@@ -7,15 +7,7 @@
 
 set -euo pipefail
 
-find_wiki_root() {
-    if [ -n "${LLM_WIKI_ROOT:-}" ] && [ -d "$LLM_WIKI_ROOT/.llm-wiki" ]; then
-        echo "$LLM_WIKI_ROOT"
-    elif [ -d "./wiki/.llm-wiki" ]; then
-        echo "./wiki"
-    else
-        echo ""
-    fi
-}
+source "$(dirname "${BASH_SOURCE[0]}")/../scripts/_utils.sh"
 
 WIKI_ROOT=$(find_wiki_root)
 [ -z "$WIKI_ROOT" ] && exit 0
@@ -27,10 +19,6 @@ REVIEW_JSON="$WIKI_ROOT/.llm-wiki/review.json"
 
 # Compute current state hash from all wiki pages
 CURRENT_HASH=$(find "$WIKI_ROOT" -maxdepth 1 -name "*.md" ! -name "index.md" -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
-if [ -d "$WIKI_ROOT/topics" ]; then
-    TOPIC_HASH=$(find "$WIKI_ROOT/topics" -name "*.md" -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
-    CURRENT_HASH=$(echo "$CURRENT_HASH$TOPIC_HASH" | sha256sum | cut -d' ' -f1)
-fi
 
 cat << HEADER
 ---

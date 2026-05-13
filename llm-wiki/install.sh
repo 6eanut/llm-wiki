@@ -7,21 +7,57 @@
 set -euo pipefail
 
 FORCE=false
+VERBOSE=false
+UPDATE=false
 for arg in "$@"; do
     case "$arg" in
         --help|-h)
-            echo "Usage: install.sh [--force]"
+            echo "Usage: install.sh [--force] [--update] [--verbose]"
             echo "Install the LLM Wiki skill to ~/.claude/skills/llm-wiki/"
             echo "  --force     Overwrite existing installation"
+            echo "  --update    Update from the source repository (git pull)"
+            echo "  --verbose   Print detailed progress information"
             echo "  --help, -h  Show this help message"
             exit 0 ;;
-        --force) FORCE=true ;;
-        *)       echo "Unknown option: $arg (use --help for usage)" >&2; exit 1 ;;
+        --force)   FORCE=true ;;
+        --verbose) VERBOSE=true ;;
+        --update)  UPDATE=true ;;
+        *)         echo "Unknown option: $arg (use --help for usage)" >&2; exit 1 ;;
     esac
 done
 
+log()  { if [ "$VERBOSE" = true ]; then echo "  [verbose] $*"; fi }
+vlog() { echo "  $*"; }
+
 SKILL_SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_DST="$HOME/.claude/skills/llm-wiki"
+
+# ── Update mode ─────────────────────────────────────────────────────────────
+
+if [ "$UPDATE" = true ]; then
+    log "Update mode: pulling latest changes from source repository..."
+
+    if [ -d "$SKILL_SRC/.git" ]; then
+        vlog "Updating source repository..."
+        (cd "$SKILL_SRC" && git pull --ff-only) || {
+            echo "ERROR: Failed to update source repository" >&2
+            exit 1
+        }
+    else
+        echo "WARNING: Not a git repository — cannot auto-update." >&2
+        echo "Please re-clone from https://github.com/6eanut/llm-wiki" >&2
+        exit 1
+    fi
+
+    # Re-run install with force to apply updates
+    log "Re-installing from updated source..."
+    bash "$SKILL_SRC/install.sh" --force
+    echo ""
+    echo "LLM Wiki skill updated successfully!"
+    exit 0
+fi
+
+# ── Main install flow ────────────────────────────────────────────────────────
 
 if [ -d "$SKILL_DST" ] && [ "$FORCE" != true ]; then
     echo "LLM Wiki skill is already installed at: $SKILL_DST"
@@ -33,14 +69,19 @@ echo "Installing LLM Wiki skill..."
 echo "  Source: $SKILL_SRC"
 echo "  Target: $SKILL_DST"
 
+log "Skill source contains $(find "$SKILL_SRC" -type f | wc -l) files"
+
 if [ -d "$SKILL_DST" ]; then
+    log "Removing existing installation at $SKILL_DST"
     rm -rf "$SKILL_DST"
 fi
 
 mkdir -p "$(dirname "$SKILL_DST")"
 cp -r "$SKILL_SRC" "$SKILL_DST"
+log "Copied skill files to $SKILL_DST"
 
 # Make scripts executable
+log "Setting executable permissions on scripts and hooks"
 chmod +x "$SKILL_DST/scripts/"*.sh 2>/dev/null || true
 chmod +x "$SKILL_DST/hooks/"*.sh 2>/dev/null || true
 
@@ -49,6 +90,7 @@ echo ""
 echo "Installing slash commands..."
 COMMANDS_DST="$HOME/.claude/commands"
 mkdir -p "$COMMANDS_DST"
+log "Commands destination: $COMMANDS_DST"
 COMMAND_COUNT=0
 for cmd in "$SKILL_DST/commands"/*.md; do
     if [ -f "$cmd" ]; then

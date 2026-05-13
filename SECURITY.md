@@ -4,7 +4,7 @@
 
 If you discover a security vulnerability in LLM Wiki, please report it responsibly.
 
-**Do not open a public issue.** Instead, send a report to [INSERT SECURITY CONTACT].
+**Do not open a public issue.** Instead, report via [GitHub Security Advisory](https://github.com/6eanut/llm-wiki/security/advisories/new).
 
 Please include:
 

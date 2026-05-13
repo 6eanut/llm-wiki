@@ -50,7 +50,7 @@ an individual is officially representing the community in public spaces.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the community leaders responsible for enforcement at
-[INSERT CONTACT METHOD].
+opening a GitHub Issue with the label "CoC" or contacting the maintainers via [GitHub Discussions](https://github.com/6eanut/llm-wiki/discussions).
 All complaints will be reviewed and investigated promptly and fairly.
 
 ## Attribution

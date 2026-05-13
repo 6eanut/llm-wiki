@@ -30,13 +30,6 @@ while IFS= read -r -d '' file; do
     VALID_TARGETS="$VALID_TARGETS"$'\n'"$slug"
 done < <(find "$WIKI_ROOT" -maxdepth 1 -name "*.md" ! -path "*/.llm-wiki/*" ! -name "index.md" -print0 2>/dev/null)
 
-# All page slugs in topics/
-if [ -d "$WIKI_ROOT/topics" ]; then
-    while IFS= read -r -d '' file; do
-        slug=$(basename "$file" .md)
-        VALID_TARGETS="$VALID_TARGETS"$'\n'"$slug"
-    done < <(find "$WIKI_ROOT/topics" -name "*.md" -print0 2>/dev/null)
-fi
 
 # Collect aliases from all pages using awk for robust YAML parsing
 collect_aliases() {
@@ -104,11 +97,6 @@ while IFS= read -r -d '' file; do
     check_page "$file"
 done < <(find "$WIKI_ROOT" -maxdepth 1 -name "*.md" ! -path "*/.llm-wiki/*" -print0 2>/dev/null)
 
-if [ -d "$WIKI_ROOT/topics" ]; then
-    while IFS= read -r -d '' file; do
-        check_page "$file"
-    done < <(find "$WIKI_ROOT/topics" -name "*.md" -print0 2>/dev/null)
-fi
 
 if [ "$BROKEN_FOUND" -eq 0 ]; then
     echo "OK: No broken wikilinks found."

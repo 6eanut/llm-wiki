@@ -1,0 +1,34 @@
+{
+  "name": "llm-wiki",
+  "version": "0.1.0",
+  "description": "Claude Code skill: builds and maintains a persistent, interlinked markdown wiki from source documents. Based on Andrej Karpathy's LLM Wiki pattern.",
+  "keywords": [
+    "claude-code-skill",
+    "claude-code",
+    "wiki",
+    "knowledge-base",
+    "llm-wiki",
+    "karpathy"
+  ],
+  "author": "LLM Wiki Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/6eanut/llm-wiki.git"
+  },
+  "bugs": {
+    "url": "https://github.com/6eanut/llm-wiki/issues"
+  },
+  "homepage": "https://github.com/6eanut/llm-wiki#readme",
+  "files": [
+    "llm-wiki/",
+    "quickstart.sh",
+    "uninstall.sh",
+    "scripts/"
+  ],
+  "scripts": {
+    "install": "./llm-wiki/install.sh",
+    "uninstall": "./uninstall.sh",
+    "quickstart": "./quickstart.sh"
+  }
+}

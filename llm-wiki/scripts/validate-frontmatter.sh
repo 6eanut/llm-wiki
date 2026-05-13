@@ -102,12 +102,6 @@ while IFS= read -r -d '' file; do
     check_page "$file"
 done < <(find "$WIKI_ROOT" -maxdepth 1 -name "*.md" ! -path "*/.llm-wiki/*" ! -name "index.md" -print0 2>/dev/null)
 
-# Check nested topics directory if it exists
-if [ -d "$WIKI_ROOT/topics" ]; then
-    while IFS= read -r -d '' file; do
-        check_page "$file"
-    done < <(find "$WIKI_ROOT/topics" -name "*.md" -print0 2>/dev/null)
-fi
 
 if [ "$ISSUES_FOUND" -eq 0 ]; then
     echo "OK: All pages have valid frontmatter."

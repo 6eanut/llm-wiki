@@ -7,15 +7,7 @@
 
 set -euo pipefail
 
-find_wiki_root() {
-    if [ -n "${LLM_WIKI_ROOT:-}" ] && [ -d "$LLM_WIKI_ROOT/.llm-wiki" ]; then
-        echo "$LLM_WIKI_ROOT"
-    elif [ -d "./wiki/.llm-wiki" ]; then
-        echo "./wiki"
-    else
-        echo ""
-    fi
-}
+source "$(dirname "${BASH_SOURCE[0]}")/../scripts/_utils.sh"
 
 WIKI_ROOT=$(find_wiki_root)
 [ -z "$WIKI_ROOT" ] && exit 0

@@ -27,11 +27,6 @@ fi
 # We hash the concatenation of all YAML frontmatter blocks
 LIVE_HASH=$(find "$WIKI_ROOT" -maxdepth 1 -name "*.md" ! -name "index.md" -exec sed -n '/^---$/,/^---$/p' {} \; 2>/dev/null | sha256sum | cut -d' ' -f1)
 
-# Also include nested pages if they exist
-if [ -d "$WIKI_ROOT/topics" ]; then
-    NESTED_HASH=$(find "$WIKI_ROOT/topics" -name "*.md" -exec sed -n '/^---$/,/^---$/p' {} \; 2>/dev/null | sha256sum | cut -d' ' -f1)
-    LIVE_HASH=$(echo "$LIVE_HASH$NESTED_HASH" | sha256sum | cut -d' ' -f1)
-fi
 
 if [ ! -f "$INDEX_HASH_FILE" ]; then
     echo "STALE: No stored index hash found."

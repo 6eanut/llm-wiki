@@ -5,7 +5,7 @@ All notable changes to LLM Wiki will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.0] — 2026-05-03
 
 ### Added
 
@@ -23,3 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Project setup script (`setup-project.sh`) with optional hooks configuration
 - Wiki initialization script (`init-wiki.sh`)
 - Global installation script (`install.sh`)
+- Quickstart script (`quickstart.sh`) with demo content
+- Uninstall script (`uninstall.sh`)
+- Demo source files (Greek mythology)
+- CI pipeline (ShellCheck + markdownlint + integration tests)
+- Local CI runner (`scripts/ci-local.sh`)
+- Community files (CoC, Contributing, Security, Support, PR/Issue templates)
+
+### Fixed
+
+- CI failures in initial workflow configuration
+- Portability issues for non-Linux environments

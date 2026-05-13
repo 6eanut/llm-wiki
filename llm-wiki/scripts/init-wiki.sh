@@ -46,6 +46,12 @@ if [ ! -f "$WIKI_ROOT/.llm-wiki/config.md" ] || [ "$FORCE" = true ]; then
     cat > "$WIKI_ROOT/.llm-wiki/config.md" << 'CONFEOF'
 # Wiki Configuration
 
+This document uses a standard YAML block for settings. The frontmatter
+between `---` markers is machine-parseable; the surrounding markdown
+provides human-readable documentation.
+
+---
+
 ## Wiki Settings
 wiki_name: "My Wiki"
 wiki_root: "./wiki"
@@ -63,6 +69,11 @@ prefer_language_match: true  # Prefer pages in query language
 ## Lint Settings
 lint_on_startup: false       # Run quick lint on session start
 full_lint_frequency: 10      # Suggest full lint every N ingests
+
+---
+
+To change a setting, edit the value after the colon. Lines beginning
+with `#` are comments and are ignored.
 CONFEOF
     echo "  ✓ config.md"
 fi

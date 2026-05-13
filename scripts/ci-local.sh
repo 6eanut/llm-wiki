@@ -93,9 +93,9 @@ if command -v markdownlint-cli2 &>/dev/null; then
         SECURITY.md \
         CHANGELOG.md \
         SUPPORT.md \
+        FAQ.md \
         "llm-wiki/**/*.md" \
         ".github/**/*.md" \
-        FAQ.md \
         2>&1; then
         success "markdownlint passed"
         PASS=$((PASS + 1))
@@ -190,23 +190,31 @@ EOF
         INTEGRATION_OK=false
     fi
 
-    # Test find-broken-links.sh
+    # Test find-broken-links.sh — reports failure on broken links
     echo ""
     echo "--- Testing find-broken-links.sh ---"
-    bash "$PROJECT_ROOT/llm-wiki/scripts/find-broken-links.sh" ./wiki || true
-    success "  find-broken-links.sh (completed)"
+    if bash "$PROJECT_ROOT/llm-wiki/scripts/find-broken-links.sh" ./wiki; then
+        success "  find-broken-links.sh (no broken links)"
+    else
+        error "  find-broken-links.sh found broken links"
+        INTEGRATION_OK=false
+    fi
 
-    # Test find-orphans.sh
+    # Test find-orphans.sh — reports failure when orphans found
     echo ""
     echo "--- Testing find-orphans.sh ---"
-    bash "$PROJECT_ROOT/llm-wiki/scripts/find-orphans.sh" ./wiki || true
-    success "  find-orphans.sh (completed)"
+    if bash "$PROJECT_ROOT/llm-wiki/scripts/find-orphans.sh" ./wiki; then
+        success "  find-orphans.sh (no orphans)"
+    else
+        error "  find-orphans.sh failed"
+        INTEGRATION_OK=false
+    fi
 
-    # Test check-stale.sh
+    # Test check-stale.sh — exit 2 when no stored hash (fresh wiki)
     if [ -f "$PROJECT_ROOT/llm-wiki/scripts/check-stale.sh" ]; then
         echo ""
         echo "--- Testing check-stale.sh ---"
-        bash "$PROJECT_ROOT/llm-wiki/scripts/check-stale.sh" ./wiki || true
+        bash "$PROJECT_ROOT/llm-wiki/scripts/check-stale.sh" ./wiki || true  # exit 2 when no stored hash (fresh wiki)
         success "  check-stale.sh (completed)"
     fi
 
