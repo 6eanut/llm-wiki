@@ -7,6 +7,7 @@
 
 set -euo pipefail
 
+# shellcheck disable=SC1091
 source "$(dirname "${BASH_SOURCE[0]}")/../scripts/_utils.sh"
 
 WIKI_ROOT=$(find_wiki_root)
